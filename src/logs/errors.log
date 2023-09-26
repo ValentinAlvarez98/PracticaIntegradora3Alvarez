@@ -1,0 +1,4 @@
+fatal: Testing log {"date":"20/9/2023","method":"GET","url":"/api/loggerTest"}
+error: Testing log {"date":"20/9/2023","method":"GET","url":"/api/loggerTest"}
+error: ["Se requiere un email valido"] {"At":"UsersRepository.getOne (file:///C:/Users/Dne/Desktop/Programaci%C3%B3n/Coderhouse/Proyecto%20Final%20BackEnd/Desaf%C3%ADoLogger/src/models/repositories/users/users.repository.js:36:43)","date":"20/9/2023","method":"POST","url":"/api/users/register"}
+error: ["Se requiere un email valido"] {"At":"UsersRepository.getOne (file:///C:/Users/Dne/Desktop/Programaci%C3%B3n/Coderhouse/Proyecto%20Final%20BackEnd/Desaf%C3%ADoLogger/src/models/repositories/users/users.repository.js:36:43)","date":"20/9/2023","method":"POST","url":"/api/users/register"}

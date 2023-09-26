@@ -1,0 +1,43 @@
+{
+  "name": "practica-integradora-3-alvarez",
+  "version": "1.0.0",
+  "description": "Tercera práctica integradora del curso de programación backend en Coderhouse.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValentinAlvarez98/PracticaIntegradora3Alvarez.git"
+  },
+  "author": "Valentín Alvarez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ValentinAlvarez98/PracticaIntegradora3Alvarez/issues"
+  },
+  "homepage": "https://github.com/ValentinAlvarez98/PracticaIntegradora3Alvarez#readme",
+  "dependencies": {
+    "artillery": "^2.0.0-37",
+    "bcrypt": "^5.1.1",
+    "commander": "^11.0.0",
+    "connect-mongo": "^5.0.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.3",
+    "mongoose-paginate-v2": "^1.7.4",
+    "nodemailer": "^6.9.5",
+    "nodemon": "^3.0.1",
+    "passport": "^0.6.0",
+    "passport-github2": "^0.1.12",
+    "socket.io": "^4.7.2",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.1.0"
+  }
+}
