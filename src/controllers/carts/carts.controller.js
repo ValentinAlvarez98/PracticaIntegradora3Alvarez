@@ -7,7 +7,7 @@ import {
 
 import {
     verifyJWT
-} from '../../utils/jwt/jwt.utils.js';
+} from '../../utils/JWT/jwt.utils.js';
 
 const {
     cartsRepository
