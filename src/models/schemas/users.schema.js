@@ -32,8 +32,8 @@ const usersSchema = new mongoose.Schema({
 
       role: {
             type: String,
-            enum: ['admin', 'user'],
-            default: 'user',
+            enum: ['ADMIN', 'USER', 'PREMIUM'],
+            default: 'USER',
       },
 
       phone: {
@@ -43,7 +43,15 @@ const usersSchema = new mongoose.Schema({
       date_created: {
             type: Date,
             default: Date.now,
-      }
+      },
+
+      password_reset_token: {
+            type: String,
+      },
+
+      password_reset_expires: {
+            type: Date,
+      },
 
 });
 

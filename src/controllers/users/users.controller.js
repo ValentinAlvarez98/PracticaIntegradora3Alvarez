@@ -10,11 +10,14 @@ import {
       generateJWT
 } from '../../utils/JWT/jwt.utils.js';
 
+
 import CONFIG from '../../config/environment/config.js';
 
 import {
       sendWelcomeEmail,
-      sendGoodbyeEmail
+      sendGoodbyeEmail,
+      sendResetPassword,
+      sendResetPasswordConfirmation
 } from '../../utils/mailing/mailing.utils.js';
 
 
@@ -166,6 +169,13 @@ export class UsersController {
                   const updatedUser = await usersRepository.updateOne(email, payload);
 
                   const response = successResponse(updatedUser);
+
+                  const token = generateJWT(response.payload);
+
+                  res.cookie('auth', token, {
+                        httpOnly: true,
+                        maxAge: 60 * 60 * 1000,
+                  });
 
                   if (response.payload.password) response.payload.password = undefined;
 
@@ -344,5 +354,54 @@ export class UsersController {
             };
 
       };
+
+      static async resetPasswordRequest(req, res, next) {
+
+            try {
+
+                  const payload = req.body;
+
+                  const updatedUser = await usersRepository.createResetToken(payload);
+
+                  await sendResetPassword(updatedUser.email, updatedUser.password_reset_token);
+
+                  res.status(200).json({
+                        message: `Correo electrónico de restablecimiento de contraseña enviado a ${updatedUser.email}`
+                  });
+
+            } catch (error) {
+
+                  next(error);
+
+            }
+
+      };
+
+      static async resetPassword(req, res, next) {
+
+            try {
+
+                  const token = req.params.token;
+
+                  const payload = {
+                        ...req.body,
+                        token
+                  }
+
+                  const updatedUser = await usersRepository.resetPassword(payload);
+
+                  await sendResetPasswordConfirmation(payload.email);
+
+                  res.status(200).json({
+                        message: `Contraseña de usuario ${updatedUser.email}, restablecida correctamente`
+                  });
+
+            } catch (error) {
+
+                  next(error);
+
+            }
+
+      }
 
 };

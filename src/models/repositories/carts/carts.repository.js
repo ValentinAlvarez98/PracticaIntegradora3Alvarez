@@ -54,9 +54,11 @@ export class CartsRepository {
 
     };
 
-    async addProduct(code, productId, quantity) {
+    async addProduct(code, productId, quantity, user) {
 
-        const dto = new AddProductDTO(code, productId, quantity);
+        if (!user) throw new Error('No tienes permisos para realizar esta acción');
+
+        const dto = new AddProductDTO(code, productId, quantity, user);
 
         const preparedCart = await dto.prepareData();
 

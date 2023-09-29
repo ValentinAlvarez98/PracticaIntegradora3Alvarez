@@ -3,6 +3,8 @@ import {
       compareHash
 } from "../../../utils/bcrypt/bcrypt.utils.js";
 
+import crypto from "crypto";
+
 const validEmail = (email) => {
 
       const emailRegex = /^\w+([\.-]?\w+)*@(?:hotmail|outlook|gmail|coder|github)\.(?:|com|es)+$/i;
@@ -64,7 +66,7 @@ export class LoadUserDTO {
             this.first_name = user.first_name;
             this.last_name = user.last_name;
             this.phone = user.phone;
-            this.role = user.role;
+            this.role = user.role.toUpperCase();
             errors.length > 0 ? this.errors = errors : null;
 
       };
@@ -93,10 +95,10 @@ export class SaveUserDTO {
 
             this.first_name = payload.first_name;
             this.last_name = payload.last_name;
-            this.email = payload.email;
+            this.email = payload.email.toLowerCase();
             this.age = payload.age;
             this.password = hashedPassword;
-            this.role = payload.role;
+            this.role = payload.role ? payload.role.toUpperCase() : 'USER';
             this.phone = payload.phone;
             errors.length > 0 ? this.errors = errors : null;
 
@@ -114,25 +116,31 @@ export class UpdateUserDTO {
 
             if (updatedPayload.password && updatedPayload.password.length < 8) errors.push("La contraseña debe tener al menos 8 caracteres");
 
-            if (updatedPayload.password && updatedPayload.password !== updatedPayload.confirm_password) errors.push("Las contraseñas no coinciden");
+            const executeValidation = updatedPayload.password && payloadToUpdate ? true : false;
 
-            if (updatedPayload.password) updatedPayload.password = createHash(updatedPayload.password);
+            if (executeValidation) {
 
-            for (const key in updatedPayload) {
+                  const compare = compareHash(updatedPayload.password, payloadToUpdate);
 
-                  if (updatedPayload[key]) payloadToUpdate[key] = updatedPayload[key];
+                  if (!compare) errors.push("Contraseña incorrecta");
 
             };
 
-            if (payloadToUpdate.password && payloadToUpdate.password.length < 8) errors.push("La contraseña debe tener al menos 8 caracteres");
+            for (const key in updatedPayload) {
+
+                  if (updatedPayload[key] && key !== "password") payloadToUpdate[key] = updatedPayload[key];
+
+            };
 
             this.first_name = payloadToUpdate.first_name;
             this.last_name = payloadToUpdate.last_name;
             this.email = payloadToUpdate.email;
             this.age = payloadToUpdate.age;
             this.password = payloadToUpdate.password;
-            this.role = payloadToUpdate.role;
-            this.phone = payloadToUpdate.phone;
+            this.role = payloadToUpdate.role ? payloadToUpdate.role.toUpperCase() : 'USER';
+            this.phone = payloadToUpdate.phone ? payloadToUpdate.phone : '';
+            this.password_reset_token = payloadToUpdate.password_reset_token ? payloadToUpdate.password_reset_token : '';
+            this.password_reset_expires = payloadToUpdate.password_reset_expires ? payloadToUpdate.password_reset_expires : '';
             errors.length > 0 ? this.errors = errors : null;
 
       }
@@ -182,7 +190,7 @@ export class LoadAdminDTO {
             };
 
             this.email = admin.email;
-            this.role = admin.role;
+            this.role = admin.role.toUpperCase();
             this.first_name = admin.first_name;
             this.last_name = admin.last_name;
             errors.length > 0 ? this.errors = errors : null;
@@ -190,3 +198,69 @@ export class LoadAdminDTO {
       };
 
 };
+
+export class CreateResetTokenDTO {
+
+      constructor(payload) {
+
+            const errors = [];
+
+            if (!validEmail(payload.email)) errors.push("Se requiere un email valido");
+
+            const token = crypto.randomBytes(20).toString('hex');
+
+            const expires = new Date();
+
+            expires.setHours(expires.getHours() + 1);
+
+            this.email = payload.email;
+            this.first_name = payload.first_name;
+            this.last_name = payload.last_name;
+            this.email = payload.email;
+            this.age = payload.age;
+            this.role = payload.role ? payload.role.toUpperCase() : 'USER';
+            this.phone = payload.phone;
+            this.password = payload.password;
+            this.password_reset_token = token;
+            this.password_reset_expires = expires;
+            errors.length > 0 ? this.errors = errors : null;
+
+      };
+
+}
+
+export class ResetPasswordDTO {
+
+      constructor(payload, user) {
+
+            const errors = [];
+
+            if (!validEmail(user.email)) errors.push("Se requiere un email valido");
+
+            const executeValidation = payload.password && user.password ? true : false;
+
+            if (executeValidation) {
+
+                  const compare = compareHash(payload.password, user);
+
+                  if (compare) errors.push("La contraseña no puede ser igual a la anterior");
+
+            };
+
+            const hashedPassword = createHash(payload.password);
+
+            this.email = user.email;
+            this.first_name = user.first_name;
+            this.last_name = user.last_name;
+            this.email = user.email;
+            this.age = user.age;
+            this.role = user.role ? user.role.toUpperCase() : 'USER';
+            this.phone = user.phone;
+            this.password = hashedPassword;
+            this.passwordResetToken = user.passwordResetToken;
+            this.passwordResetExpires = user.passwordResetExpires;
+            errors.length > 0 ? this.errors = errors : null;
+
+      }
+
+}

@@ -47,9 +47,9 @@ export class ProductsRepository {
 
     };
 
-    async addOne(payload) {
+    async addOne(payload, user) {
 
-        const product = new SaveProductDTO(payload);
+        const product = new SaveProductDTO(payload, user);
 
         const preparedProduct = await product.prepareData();
 
@@ -57,13 +57,45 @@ export class ProductsRepository {
 
     };
 
-    async updateOne(id, product) {
+    async updateOne(id, product, userPayload) {
+
+        const user = userPayload.payload;
+
+        if (!user.role === 'ADMIN' || !user.role === 'PREMIUM') {
+            throw new Error('No tienes permisos para realizar esta acción')
+        }
+
+        const productToUpdate = this.getById(id);
+
+        if (!productToUpdate) {
+            throw new Error('El producto no existe');
+        };
+
+        if (productToUpdate.owner !== user._id) {
+            throw new Error('El producto no te pertenece');
+        };
 
         return await this.dao.updateById(id, product);
 
     };
 
-    async deleteOne(id) {
+    async deleteOne(id, userPayload) {
+
+        const user = userPayload.payload;
+
+        if (!user.role === 'ADMIN' || !user.role === 'PREMIUM') {
+            throw new Error('No tienes permisos para realizar esta acción')
+        }
+
+        const productToUpdate = this.getById(id);
+
+        if (!productToUpdate) {
+            throw new Error('El producto no existe');
+        };
+
+        if (productToUpdate.owner !== user._id) {
+            throw new Error('El producto no te pertenece');
+        };
 
         return await this.dao.deleteById(id);
 

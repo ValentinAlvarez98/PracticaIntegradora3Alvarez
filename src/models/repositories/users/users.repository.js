@@ -13,6 +13,8 @@ const {
       UpdateUserDTO,
       DeleteUserDTO,
       LoadAdminDTO,
+      CreateResetTokenDTO,
+      ResetPasswordDTO
 } = getDTOS();
 
 const {
@@ -92,6 +94,38 @@ export class UsersRepository {
             if (userPayload.errors) throw new Error(JSON.stringify(userPayload.errors));
 
             return userPayload;
+
+      };
+
+      async createResetToken(payload) {
+
+            const userPayload = new GetUserDTO(payload.email);
+
+            if (userPayload.errors) throw new Error(JSON.stringify(userPayload.errors));
+
+            const user = await this.dao.getOne(userPayload);
+
+            const userToUpdate = new CreateResetTokenDTO(user);
+
+            if (userToUpdate.errors) throw new Error(JSON.stringify(userToUpdate.errors));
+
+            return await this.dao.updateOne(payload.email, userToUpdate);
+
+      };
+
+      async resetPassword(payload) {
+
+            const userPayload = new GetUserDTO(payload.email);
+
+            if (userPayload.errors) throw new Error(JSON.stringify(userPayload.errors));
+
+            const userToUpdate = await this.dao.getOne(userPayload);
+
+            const updatedUser = new ResetPasswordDTO(payload, userToUpdate);
+
+            if (updatedUser.errors) throw new Error(JSON.stringify(updatedUser.errors));
+
+            return await this.dao.updateOne(payload.email, updatedUser);
 
       };
 

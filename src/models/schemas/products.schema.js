@@ -51,6 +51,13 @@ const productsSchema = mongoose.Schema({
             required: true,
       },
 
+      owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+            required: true,
+            default: 'admin'
+      }
+
 });
 
 productsSchema.plugin(mongoosePaginate)

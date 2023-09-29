@@ -16,5 +16,7 @@ viewsRouter.get('/login', ViewsController.login);
 viewsRouter.get('/register', ViewsController.register);
 viewsRouter.get('/profile', authMiddleware, ViewsController.profile);
 viewsRouter.get('/products', authMiddleware, ViewsController.products);
+viewsRouter.get('/resetPasswordRequest', ViewsController.resetPasswordRequest);
+viewsRouter.get('/resetPassword', ViewsController.resetPassword);
 
 export default viewsRouter;

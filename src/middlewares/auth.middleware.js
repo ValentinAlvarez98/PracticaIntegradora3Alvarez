@@ -95,27 +95,59 @@ export const authAdmin = (req, res, next) => {
 
 };
 
-export const authUser = (req, res, next) => {
+export const authPremium = (req, res, next) => {
 
     try {
 
-        const headerAuth = req.headers.authorization;
+        const cookieAuth = req.cookies.auth;
 
-        if (!headerAuth) {
+        if (!cookieAuth) {
 
             return res.status(HTTP_STATUS.UNAUTHORIZED).json(errorResponse('No se ha enviado el token de autenticación'));
 
         };
 
-        const token = headerAuth.split(' ')[1];
+        const token = cookieAuth;
 
         const decoded = verifyJWT(token);
 
-        console.log(decoded);
+        if (decoded.payload.role !== 'ADMIN' && decoded.payload.role !== 'PREMIUM') {
+
+            return res.status(HTTP_STATUS.UNAUTHORIZED).json(errorResponse('No está autorizado para acceder a este recurso'));
+
+        };
+
+        req.user = decoded.payload;
+
+        next();
+
+    } catch (error) {
+
+        throw error;
+
+    };
+
+};
+
+export const authUser = (req, res, next) => {
+
+    try {
+
+        const cookieAuth = req.cookies.auth;
+
+        if (!cookieAuth) {
+
+            return res.status(HTTP_STATUS.UNAUTHORIZED).json(errorResponse('No se ha enviado el token de autenticación'));
+
+        };
+
+        const token = cookieAuth;
+
+        const decoded = verifyJWT(token);
 
         const role = decoded.payload.role;
 
-        if (role !== 'user') {
+        if (role === 'ADMIN') {
 
             return res.status(HTTP_STATUS.UNAUTHORIZED).json(errorResponse('No está autorizado para acceder a este recurso'));
 

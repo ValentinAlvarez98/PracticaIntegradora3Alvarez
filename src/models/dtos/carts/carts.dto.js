@@ -57,11 +57,12 @@ export class SaveCartDTO {
 
 export class AddProductDTO {
 
-    constructor(code, productId, quantity) {
+    constructor(code, productId, quantity, user) {
 
         this.code = code;
         this.productId = productId;
         this.quantity = quantity;
+        this.user = user;
 
     };
 
@@ -94,6 +95,18 @@ export class AddProductDTO {
         if (!cart) {
 
             throw new Error('El carrito no existe');
+
+        };
+
+        const ownerId = product.owner.toString();
+
+        if (this.user.role === 'ADMIN' || this.user.role === 'PREMIUM') {
+
+            if (ownerId === this.user.id) {
+
+                throw new Error('No puedes comprar tus propios productos');
+
+            };
 
         };
 

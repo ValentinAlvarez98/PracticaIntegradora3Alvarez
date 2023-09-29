@@ -2,13 +2,22 @@ import productsModel from "../../schemas/products.schema.js";
 
 export class SaveProductDTO {
 
-    constructor(payload) {
+    constructor(payload, user) {
 
         this.payload = payload;
+        this.user = user;
 
     };
 
     async prepareData() {
+
+        const user = this.user.payload;
+
+        if (!user.role === 'ADMIN' || !user.role === 'PREMIUM') {
+            throw new Error('No tienes permisos para realizar esta acción')
+        };
+
+
 
         const product = {
             title: this.payload.title,
@@ -19,8 +28,11 @@ export class SaveProductDTO {
             stock: this.payload.stock,
             category: this.payload.category,
             thumbnails: this.payload.thumbnails,
-            id: this.payload.id
+            id: this.payload.id,
+            owner: user.id ? user.id : 'ADMIN',
         }
+
+        console.log(product);
 
         const campos = [];
 

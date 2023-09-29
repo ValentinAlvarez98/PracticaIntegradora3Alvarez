@@ -5,6 +5,10 @@ import {
     getRepositories
 } from '../../models/repositories/index.repository.js';
 
+import {
+    verifyJWT
+} from '../../utils/jwt/jwt.utils.js';
+
 const {
     cartsRepository
 } = getRepositories();
@@ -98,7 +102,13 @@ export class CartsController {
                 quantity
             } = req.body;
 
-            const result = await cartsRepository.addProduct(code, productId, quantity);
+            const token = req.cookies.auth;
+
+            const userPayload = verifyJWT(token);
+
+            const user = userPayload.payload;
+
+            const result = await cartsRepository.addProduct(code, productId, quantity, user);
 
             res.send(successResponse(result));
 

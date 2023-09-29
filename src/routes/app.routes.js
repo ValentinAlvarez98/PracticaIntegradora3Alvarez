@@ -12,7 +12,7 @@ import viewsRouter from './views/views.routes.js';
 import loggerRouter from './logger/logger.routes.js';
 
 import {
-      authFromHeader as authMiddleware
+      authFromCookie as authMiddleware
 } from '../middlewares/auth.middleware.js';
 
 import {

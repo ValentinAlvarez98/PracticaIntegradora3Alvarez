@@ -6,15 +6,15 @@ import {
 } from "../../controllers/products/products.controller.js";
 
 import {
-    authAdmin as adminMiddleware,
+    authPremium as premiumMiddleware
 } from "../../middlewares/auth.middleware.js";
 
 const productsRouter = Router();
 
 productsRouter.get('/', ProductsController.getAll);
 productsRouter.get('/:id', ProductsController.getById);
-productsRouter.post('/', adminMiddleware, ProductsController.addOne);
-productsRouter.put('/:id', adminMiddleware, ProductsController.updateOne);
-productsRouter.delete('/:id', adminMiddleware, ProductsController.deleteOne);
+productsRouter.post('/', premiumMiddleware, ProductsController.addOne);
+productsRouter.put('/:id', premiumMiddleware, ProductsController.updateOne);
+productsRouter.delete('/:id', premiumMiddleware, ProductsController.deleteOne);
 
 export default productsRouter;

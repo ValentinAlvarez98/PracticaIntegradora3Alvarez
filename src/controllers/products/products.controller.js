@@ -2,6 +2,10 @@ import {
     getRepositories
 } from '../../models/repositories/index.repository.js';
 
+import {
+    verifyJWT
+} from '../../utils/JWT/jwt.utils.js';
+
 const {
     productsRepository
 } = getRepositories();
@@ -64,7 +68,11 @@ export class ProductsController {
         try {
 
             const product = req.body;
-            const result = await productsRepository.addOne(product);
+            const token = req.cookies.auth;
+
+            const user = verifyJWT(token);
+
+            const result = await productsRepository.addOne(product, user);
 
             res.send({
                 status: 'success',
@@ -88,7 +96,10 @@ export class ProductsController {
             } = req.params;
 
             const product = req.body;
-            const result = await productsRepository.updateOne(id, product);
+            const token = req.cookies.auth;
+
+            const user = verifyJWT(token);
+            const result = await productsRepository.updateOne(id, product, user);
 
             res.send({
                 status: 'success',
@@ -111,7 +122,10 @@ export class ProductsController {
                 id
             } = req.params;
 
-            const result = await productsRepository.deleteOne(id);
+            const token = req.cookies.auth;
+
+            const user = verifyJWT(token);
+            const result = await productsRepository.deleteOne(id, user);
 
             res.send({
                 status: 'success',

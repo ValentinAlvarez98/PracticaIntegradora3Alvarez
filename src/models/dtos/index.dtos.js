@@ -5,6 +5,8 @@ import {
       UpdateUserDTO,
       DeleteUserDTO,
       LoadAdminDTO,
+      CreateResetTokenDTO,
+      ResetPasswordDTO
 } from "./users/users.dto.js";
 
 import {
@@ -26,6 +28,8 @@ export const getDTOS = () => ({
       UpdateUserDTO,
       DeleteUserDTO,
       LoadAdminDTO,
+      CreateResetTokenDTO,
+      ResetPasswordDTO,
       GetCartDTO,
       SaveCartDTO,
       AddProductDTO,
